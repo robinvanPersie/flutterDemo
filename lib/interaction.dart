@@ -9,8 +9,8 @@ import 'dart:developer';
 //void main() => runApp(new _TapBoxAApp());
 //void main() => runApp(new _TapBoxBApp());
 //void main() => runApp(new _TapBoxCApp());
-//void main() => runApp(new TutorialHome());
-void main() => runApp(new RaisedApp());
+void main() => runApp(new TutorialHome());
+//void main() => runApp(new RaisedApp());
 
 //**************** widget管理自己的状态
 

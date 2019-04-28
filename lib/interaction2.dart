@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(null);
+  runApp(new MaterialApp(
+    title: 'Shopping App title',
+    home: ShoppingList(
+      products: <Product>[
+        new Product(name: 'Eggs'),
+        new Product(name: 'Flour'),
+        new Product(name: 'Chocolate chips'),
+      ],
+    ),
+  ));
 }
 
 //************* 购物车, 整合有无状态widget ****************
@@ -45,5 +54,51 @@ class ShoppingListItem extends StatelessWidget {
       title: new Text(product.name, style: _getTextStyle(context),),
     );
     return lt;
+  }
+}
+
+class ShoppingList extends StatefulWidget {
+
+  ShoppingList({Key key, this.products}) : super(key: key);
+
+  final List<Product> products;
+
+  @override
+  State<StatefulWidget> createState() {
+    return new _ShoppingListState();
+  }
+}
+
+class _ShoppingListState extends State<ShoppingList> {
+
+  Set<Product> _shoppingCart = new Set<Product>();
+
+  void _handleCartChanged(Product product, bool inCart) {
+    setState(() {
+      if (inCart) {
+        _shoppingCart.add(product);
+      } else {
+        _shoppingCart.remove(product);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      appBar: AppBar(
+        title: Text('Shopping List'),
+      ),
+      body: ListView(
+        padding: EdgeInsets.symmetric(vertical: 8.0),
+        children: widget.products.map((Product product) {
+          return new ShoppingListItem(
+              product: product,
+              inCart: _shoppingCart.contains(product),
+              onCartChanged: _handleCartChanged,
+          );
+        }).toList(),
+      ),
+    );
   }
 }

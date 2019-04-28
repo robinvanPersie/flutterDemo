@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
  * 常用布局
  */
 
-//void main() => runApp(new GridApp());
-void main() => runApp(new ListApp());
+void main() => runApp(new GridApp());
+//void main() => runApp(new ListApp());
 //void main() => runApp(new StackApp());
 
 class GridApp extends StatelessWidget {
