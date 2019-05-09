@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'sub/product_page.dart';
 
 class HomePage extends StatefulWidget {
 
@@ -6,87 +7,53 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => new _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+var title = ['精选推荐', '女装', '男装', '内衣', '母婴', '化妆品', '家居',
+'鞋包配饰', '美食', '文体车品', '数码家电'];
+TabController _tabController;
 
-  int _currentPageIndex = 0;
-  PageController _pageController = PageController();
+// home_page 最外层
+class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: title.length, vsync: this);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: <Widget>[
-        SliverToBoxAdapter(
-          child: Container(
-            height: 50.0,
-            color: Colors.greenAccent,
-            child: Text('sliver to box adapter'),
-          ),
-        ),
-        SliverPersistentHeader(
-          pinned: true,
-          delegate: _MSliverPersistentHeaderDelegate(
-              Center(
-                child: Text('persistent header'),
-              )
-          ),
-        ),
-        SliverToBoxAdapter(
-          child: Container(
-            height: 300.0,
-            color: Colors.greenAccent,
-            child: PageView.builder(
-                controller: _pageController,
-                onPageChanged: _pageChanged,
-                itemBuilder: (context, index){
-                  return SliverList(
-                    delegate: SliverChildBuilderDelegate(_buildItem, childCount: 20),
-                  );
-                },
-                itemCount: 3,
+    return DefaultTabController(
+      length: title.length,
+      child: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return [
+            SliverToBoxAdapter(
+              child: Container(
+                height: 140.0,
+                color: Colors.lightBlue,
+                child: Center(child: Text('top banner'),),
+              ),
             ),
-          ),
-        ),
-
-        //        SliverAppBar(
-//          title: Text('sliver appbar'),
-        // 固定在上面
-//          pinned: true,
-        // title里的文字 向下滚入，向上滚出
-//          floating: false,
-        // CollapsingToolbarLayout 效果，但是文字也会消失
-//          expandedHeight: 100.0,
-//          flexibleSpace: FlexibleSpaceBar(
-//            title: Text('flexible Space'),
-//            background: Image.asset('images/dog.jpeg', fit: BoxFit.cover,),
-//          ),
-//        ),
-//        SliverSafeArea(
-//          sliver: SliverPadding(padding: EdgeInsets.all(10.0), sliver: Text('sliver safe area'),),
-//        ),
-      ],
+            SliverPersistentHeader(
+              pinned: true,
+              delegate: _MSliverPersistentHeaderDelegate(
+                child: TabBarLayout(),
+              ),
+            ),
+          ];
+        },
+        body: TabBarVP(controller: _tabController),
+      ),
     );
   }
-
-  Widget _buildItem(context, index) {
-    return Container(
-      height: 44.0,
-      child: Text('item: $index'),
-    );
-  }
-
-  _pageChanged(int index) {
-    setState(() {
-       _currentPageIndex = index;
-    });
-  }
-
 }
 
+// appbarLayout
 class _MSliverPersistentHeaderDelegate extends SliverPersistentHeaderDelegate {
 
   final Widget child;
 
-  _MSliverPersistentHeaderDelegate(@required this.child);
+  _MSliverPersistentHeaderDelegate({@required this.child});
 
   @override
   Widget build(BuildContext context, double shrinkOffset,
@@ -95,11 +62,9 @@ class _MSliverPersistentHeaderDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  // TODO: implement maxExtent
   double get maxExtent => 50.0;
 
   @override
-  // TODO: implement minExtent
   double get minExtent => 50.0;
 
   @override
@@ -108,3 +73,64 @@ class _MSliverPersistentHeaderDelegate extends SliverPersistentHeaderDelegate {
         || minExtent != oldDelegate.minExtent;
   }
 }
+
+// tabBarLayout
+class TabBarLayout extends StatefulWidget {
+
+  @override
+  _TabBarLayoutState createState() => new _TabBarLayoutState();
+}
+
+class _TabBarLayoutState extends State<TabBarLayout> {
+
+  Color _primaryColor, _normalColor;
+
+  @override
+  void initState() {
+    super.initState();
+    _primaryColor = Color(0xff1384ff);
+    _normalColor = Colors.black;
+  }
+
+  List<Widget> _buildTab() {
+    return title.map((item) =>
+        Text('$item', style: TextStyle(fontSize: 15),)
+    ).toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new Container(
+      color: Colors.white,
+      child: TabBar(
+          tabs: _buildTab(),
+          controller: _tabController,
+          isScrollable: true,
+          indicatorColor: _primaryColor,
+          labelColor: _primaryColor,
+          unselectedLabelColor: _normalColor,
+      ),
+    );
+  }
+}
+
+// 与tabBarLayout 配合的 viewPager
+class TabBarVP extends StatelessWidget {
+
+  final TabController controller;
+
+  TabBarVP({@required this.controller});
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> pages = [];
+    for (int i = 0; i < 11; i++) {
+      pages.add(ProductListPage(index: i));
+    }
+    return TabBarView(
+        children: pages,
+        controller: controller,
+    );
+  }
+}
+
