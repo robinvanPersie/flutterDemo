@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'sub/product_page.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 
 class HomePage extends StatefulWidget {
 
@@ -9,6 +10,9 @@ class HomePage extends StatefulWidget {
 
 var title = ['精选推荐', '女装', '男装', '内衣', '母婴', '化妆品', '家居',
 '鞋包配饰', '美食', '文体车品', '数码家电'];
+
+var banners = ['ic_banner_first.png', 'ic_banner_second.png'];
+
 TabController _tabController;
 
 // home_page 最外层
@@ -29,9 +33,28 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           return [
             SliverToBoxAdapter(
               child: Container(
-                height: 140.0,
+                height: 150.0,
                 color: Colors.lightBlue,
-                child: Center(child: Text('top banner'),),
+                child: Swiper(
+                    itemBuilder: (context, index) {
+                      return Image.asset('images/3.0/' + banners[index], fit: BoxFit.cover,);
+                    },
+                    itemCount: 2,
+                    autoplay: true,
+//                    每一页停留时间
+                    autoplayDelay: 3000,
+//                    切换过程的时间
+                    duration: 1000,
+//                      left right arrow
+//                    control: SwiperControl(),
+//                      point
+                    pagination: SwiperPagination(
+                      builder: DotSwiperPaginationBuilder(
+                        color: Colors.white,
+                        activeColor: Colors.grey,
+                      ),
+                    ),
+                ),
               ),
             ),
             SliverPersistentHeader(

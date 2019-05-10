@@ -22,8 +22,15 @@ dependencies:
   english_words: ^3.1.0
   dio: ^2.1.0
 #  dio: ^1.0.9
+# for json
+  json_annotation: ^2.0.0
+  flutter_swiper: ^1.1.6
 
 dev_dependencies:
+# for json
+  build_runner: ^1.0.0
+  json_serializable: ^2.0.0
+
   flutter_test:
     sdk: flutter
 
@@ -46,6 +53,7 @@ flutter:
   assets:
      - images/lake.jpeg
      - images/dog.jpeg
+     - images/3.0/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
