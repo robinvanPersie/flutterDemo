@@ -27,6 +27,7 @@ class MePage extends StatelessWidget {
       itemBuilder: (context, index) {
         _Item item = list[index];
         return Container(
+          padding: EdgeInsets.only(left: 20.0, right: 20.0),
           width: size.width,
           height: item.space ? 10.0 : item.divider ? 1.0 : 48.0,
           color: Colors.white,
@@ -37,8 +38,11 @@ class MePage extends StatelessWidget {
               Row(
                 children: <Widget>[
                   Icon(item.icon, color: mainColor,),
-                  Text(item.title, style: TextStyle(fontSize: 15.0, color: Colors.black),),
-                  ],
+                  Container(
+                    padding: EdgeInsets.only(left: 5.0),
+                    child: Text(item.title, style: TextStyle(fontSize: 15.0, color: Colors.black),),
+                  ),
+                ],
               ),
               Icon(Icons.arrow_right),
             ],
