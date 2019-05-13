@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'dart:convert';
 import 'package:flutter_demo/tqx/model/product_bean.dart';
 import 'package:flutter_demo/tqx/model/goods.dart';
+import 'package:flutter_demo/tqx/net/http_api.dart';
 
 // 回调
 typedef ReqCallback<T> = void Function(T result);
@@ -40,11 +41,11 @@ class HttpClient {
     return result;
   }
   /**
-   * 普通商品API
+   * 商城产品列表
    * @params type 商品类型，与tab index对应
    */
   getProductList({int cId, int page, ReqCallback callback, ErrorCallback errorCb}) async {
-    var response = _executeGet('DataApi/index', params: {'page': page, 'cid': cId});
+    var response = _executeGet(Api.DATA_INDEX, params: {'page': page, 'cid': cId});
     response.then((r) {
       int code = r.statusCode;
       if (code == 200) {
@@ -66,6 +67,43 @@ class HttpClient {
     }).catchError((error) {
        print(error);
        errorCb(-2, '-2 er msg');
+    });
+  }
+
+  /**
+   * 销量排行榜
+   * @param type 4: 2小时，3: 全天
+   * @return
+   */
+  getRecommendList(int type, ReqCallback callback) async {
+    var response = _executeGet(Api.DATA_TOP100, params: {'type': type});
+    response.then((r){
+      int code = r.statusCode;
+      if (code == 200) {
+        var resultList = r.data['data'];
+        List<Goods> list =
+        resultList.map<Goods>((item) => Goods.fromJson(item)).toList();
+        callback({'list': list});
+      }
+    }).catchError((error) {
+      print(error);
+    });
+  }
+
+  /**
+   * 推荐页， 明日预告
+   */
+  getTomorrowProduct(int type, ReqCallback callback) {
+    var response = _executeGet(Api.DATA_HOT_GOODS, params: {'type': type});
+    response.then((r) {
+      if (r.statusCode == 200) {
+        var result = r.data['data'];
+        List<Goods> list = result.map<Goods>((item) => Goods.fromJson(item)).toList();
+        list = list.length > 10 ? list.sublist(0, 10) : list;
+        callback({'list': list});
+      }
+    }).catchError((error) {
+      print(error);
     });
   }
 }

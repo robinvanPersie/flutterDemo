@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'sub/product_page.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:flutter_demo/tqx/widget/swiper/without_control.dart';
 
 class HomePage extends StatefulWidget {
 
@@ -13,10 +14,15 @@ var title = ['精选推荐', '女装', '男装', '内衣', '母婴', '化妆品'
 
 var banners = ['ic_banner_first.png', 'ic_banner_second.png'];
 
+var loopText = ['保暖内衣', '耳机', '口红', '懒人火锅', 'T恤', '内裤', '耳钉', '帽子'];
+
 TabController _tabController;
 
 // home_page 最外层
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -33,21 +39,56 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           return [
             SliverToBoxAdapter(
               child: Container(
+                margin: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                height: 36.0,
+                decoration: BoxDecoration(color: Color(0xffdddddd), borderRadius: BorderRadius.all(Radius.circular(5.0))),
+                child: Row(
+                  children: <Widget>[
+                    Icon(Icons.search),
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.only(left: 10.0),
+                        child: Swiper(
+                          scrollDirection: Axis.vertical,
+                          itemCount: loopText.length,
+                          itemBuilder: (context, index) {
+                            return Align(
+                              alignment: FractionalOffset.centerLeft,
+                              child: Text('大家都在搜：${loopText[index]}'),
+
+                            );
+                          },
+                          autoplayDelay: 2500,
+                          duration: 1500,
+                          autoplay: true,
+                          control: SwipeWithoutControl(),
+                        ),
+                      )
+                    ),
+
+                  ],
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: Container(
+                margin: EdgeInsets.only(left: 20.0, right: 20.0),
                 height: 150.0,
                 color: Colors.lightBlue,
                 child: Swiper(
                     itemBuilder: (context, index) {
                       return Image.asset('images/3.0/' + banners[index], fit: BoxFit.cover,);
                     },
-                    itemCount: 2,
+                    itemCount: banners.length,
                     autoplay: true,
 //                    每一页停留时间
                     autoplayDelay: 3000,
 //                    切换过程的时间
                     duration: 1000,
 //                      left right arrow
-//                    control: SwiperControl(),
-//                      point
+                    control: SwipeWithoutControl(),
+//                      指示圆点
                     pagination: SwiperPagination(
                       builder: DotSwiperPaginationBuilder(
                         color: Colors.white,

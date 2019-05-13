@@ -46,7 +46,8 @@ class _ProductListPageState extends State<ProductListPage> with AutomaticKeepAli
   @override
   Widget build(BuildContext context) {
     return list == null || list.isEmpty ? Center(
-      child: Text('loading...'),
+//      child: Text('loading...'),
+      child: CircularProgressIndicator(),
     ) : RefreshIndicator(
       child: ListView.builder(
         itemBuilder: _buildItem,
@@ -56,8 +57,8 @@ class _ProductListPageState extends State<ProductListPage> with AutomaticKeepAli
     );
   }
 
-  Future _pullRefresh() {
-    return null;
+  Future _pullRefresh() async {
+    _getProductData();
   }
 
   Widget _buildItem(context, index) {
@@ -101,12 +102,12 @@ class _ProductListPageState extends State<ProductListPage> with AutomaticKeepAli
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
                       Container(
-                        padding: EdgeInsets.fromLTRB(8, 4, 8, 4),
+                        padding: EdgeInsets.fromLTRB(4, 2, 4, 2),
                         decoration: BoxDecoration(color: Colors.white, border: Border.all(color: Colors.black, width: 1.0), borderRadius: BorderRadius.all(Radius.circular(5.0))),
                         child: Text('立减¥${goods.actMoney}', style: TextStyle(fontSize: 12.0, color: Colors.black,),),
                       ),
                       Container(
-                        padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                        padding: EdgeInsets.fromLTRB(8, 4, 8, 4),
                         decoration: BoxDecoration(color: Color(0xff1384ff), borderRadius: BorderRadius.all(Radius.circular(5.0))),
                         child: Text('券后¥${goods.lastPrice}', style: TextStyle(fontSize: 15.0, color: Colors.white),),
                       ),
