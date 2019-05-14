@@ -1,37 +1,37 @@
 class Goods {
-  final num iD;
-  final String goodsId;
-  final String goodsName;
-  final String goodsClass;
-  final String goodsLink;
-  final String actLink;
-  final String imgUrl;
-  final num actMoney;
-  final double goodsPrice;
-  final double lastPrice;
-  final String beginDate;
-  final String endDate;
-  final num saleCount;
-  final num tKMoneyRate;
-  final String tjRemark;
-  final num couponCount;
-  final num couponSaleCount;
-  final int ly;
-  final String marketImage;
-  final int activityType;
-  final num orderCount;
-  final num towHourCount;
-  final num allDayCount;
-  final String sellerId;
-  final num commssionType;
-  final String shopName;
-  final String video;
-  final num commissionTwo;
-  final num commissionDay;
-  final num couponStartFee;
+  num ID;
+  String goodsId;
+  String goodsName;
+  String goodsClass;
+  String goodsLink;
+  String actLink;
+  String imgUrl;
+  num actMoney;
+  double goodsPrice;
+  double lastPrice;
+  String beginDate;
+  String endDate;
+  num saleCount;
+  num tKMoneyRate;
+  String tjRemark;
+  num couponCount;
+  num couponSaleCount;
+  int ly;
+  String marketImage;
+  int activityType;
+  num orderCount;
+  num towHourCount;
+  num allDayCount;
+  String sellerId;
+  num commssionType;
+  String shopName;
+  String video;
+  num commissionTwo;
+  num commissionDay;
+  num couponStartFee;
 
   Goods.fromJson(Map json)
-      : iD = json['ID'],
+      : ID = json['ID'],
         goodsId = json['GoodsId'],
         goodsName = json['GoodsName'],
         goodsClass = json['GoodsClass'],
@@ -67,4 +67,17 @@ class Goods {
 //   'title': title,
 //   'descritpion': description,
 // };
+
+  Goods.fromSql(Map<String, dynamic> json)
+      : ID = json['GOODS_ID'],
+        goodsName = json['NAME'],
+        actLink = json['ACT_LINK'],
+        imgUrl = json['IMAGE_URL'],
+        actMoney = json['ACT_MONEY'],
+        goodsPrice = json['GOODS_PRICE'],
+        lastPrice = json['LAST_PRICE'],
+        beginDate = json['BEGIN_DATE'],
+        endDate = json['END_DATE'],
+        saleCount = json['SALE_COUNT'],
+        ly = json['LY'];
 }

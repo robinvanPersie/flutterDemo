@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/tqx/db/data_base.dart';
+import 'package:flutter_demo/tqx/model/goods.dart';
+import 'package:flutter_demo/tqx/common/colors.dart';
 
 class FavoritePage extends StatefulWidget {
 
@@ -7,11 +10,34 @@ class FavoritePage extends StatefulWidget {
 }
 
 class _FavoritePageState extends State<FavoritePage> {
+
+  MDatabase database = MDatabase();
+  List<Goods> list;
+
+  @override
+  void initState() {
+    super.initState();
+    _getFavorites();
+  }
+
+  /**
+   * 从db里获取收藏列表
+   */
+  _getFavorites() async {
+    List<Map> result = await database.queryProduct();
+    list = List();
+    setState(() {
+      result.forEach((map) {
+        list.add(Goods.fromSql(map));
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0.2,
+        elevation: 0.4,
         title: Text('我的收藏'),
         leading: IconButton(
             icon: Icon(Icons.arrow_back),
@@ -20,24 +46,63 @@ class _FavoritePageState extends State<FavoritePage> {
             }),
         actions: <Widget>[
           MaterialButton(
-            onPressed: null,
-            child: Text('清空'),
+            onPressed: () {
+              showDialog(
+//               点击空白处 是否 dismiss
+                barrierDismissible: false,
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    content: Text('是否删除所有收藏？'),
+                    contentTextStyle: TextStyle(fontSize: 15.0, color: Colors.black),
+                    actions: <Widget>[
+                      MaterialButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('取消'),
+                      ),
+                      MaterialButton(
+                        onPressed: () {
+                          setState(() {
+                            list.clear();
+                          });
+                          Navigator.of(context).pop();
+                        },
+                        child: Text('确定'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            child: Text('清空', style: TextStyle(color: Colorful.PRIMARY_BLUE),),
           ),
         ],
       ),
-      body: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: 10.0,
-            crossAxisSpacing: 10.0,
-          ),
-          itemCount: 10,
-          itemBuilder: _buildItem,
+      body: _buildBody(),
+    );
+  }
+
+  Widget _buildBody() {
+    if (list == null) {
+      return Center(
+        child: Text('loading...'),
+      );
+    }
+    return GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 10.0,
+        crossAxisSpacing: 10.0,
       ),
+      itemCount: list.length,
+      itemBuilder: _buildItem,
     );
   }
 
   Widget _buildItem(context, index) {
+    Goods goods = list[index];
     return Container(
       padding: EdgeInsets.all(10.0),
       color: Colors.white,
@@ -47,21 +112,21 @@ class _FavoritePageState extends State<FavoritePage> {
             left: 0,
             top: 0,
             height: 100.0,
-            child: Image.network('', fit: BoxFit.cover,),
+            child: Image.network(goods.imgUrl, fit: BoxFit.cover,),
           ),
           Positioned(
             top: 110,
             left: 0,
-            child: Text('title: sjdlajfskdjflskjflskjdflskdfjlsdkfsfsfsdf', maxLines: 2, overflow: TextOverflow.ellipsis,),
+            child: Text(goods.goodsName, maxLines: 2, overflow: TextOverflow.ellipsis,),
           ),
           Positioned(
             top: 130,
-            child: Text('原价¥30.9', style: TextStyle(decoration: TextDecoration.lineThrough, fontSize: 13.0, color: Color(0xff666666),),),
+            child: Text('原价¥${goods.goodsPrice}', style: TextStyle(decoration: TextDecoration.lineThrough, fontSize: 13.0, color: Color(0xff666666),),),
           ),
           Positioned(
             top: 130,
             right: 0,
-            child: Text('销量2342', style: TextStyle(fontSize: 13.0, color: Color(0xff666666),),),
+            child: Text('销量${goods.saleCount}', style: TextStyle(fontSize: 13.0, color: Color(0xff666666),),),
           ),
         ],
       ),

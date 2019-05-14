@@ -3,6 +3,7 @@ import 'package:flutter_demo/tqx/net/http_client.dart';
 import 'package:flutter_demo/tqx/model/goods.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:flutter_demo/tqx/widget/swiper/without_control.dart';
+import 'package:flutter_demo/tqx/db/data_base.dart';
 
 class RecommendPage extends StatefulWidget {
 
@@ -13,6 +14,7 @@ class RecommendPage extends StatefulWidget {
 class _RecommendPageState extends State<RecommendPage> with AutomaticKeepAliveClientMixin {
 
   HttpClient client = HttpClient();
+  MDatabase database = MDatabase();
   List<Goods> list;
   List<Goods> tomorrows;
 
@@ -46,6 +48,7 @@ class _RecommendPageState extends State<RecommendPage> with AutomaticKeepAliveCl
       setState(() {
         tomorrows = result['list'];
         print('tomorrow size: ${tomorrows.length}');
+        database.insertProduct(tomorrows[0]);
       });
     });
   }
