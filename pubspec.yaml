@@ -25,6 +25,10 @@ dependencies:
 # for json
   json_annotation: ^2.0.0
   flutter_swiper: ^1.1.6
+#  数据库
+  sqflite: ^1.1.5
+#  文件路径访问
+  path_provider: ^1.1.0
 
 dev_dependencies:
 # for json

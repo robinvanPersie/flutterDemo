@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_demo/tqx/ui/my_favorite.dart';
 
 class MePage extends StatelessWidget {
 
@@ -26,26 +27,31 @@ class MePage extends StatelessWidget {
       itemCount: list.length,
       itemBuilder: (context, index) {
         _Item item = list[index];
-        return Container(
-          padding: EdgeInsets.only(left: 20.0, right: 20.0),
-          width: size.width,
-          height: item.space ? 10.0 : item.divider ? 1.0 : 48.0,
-          color: Colors.white,
-          child: item.title == null ? item.space ? _buildSpace() : _buildDivider() :
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Icon(item.icon, color: mainColor,),
-                  Container(
-                    padding: EdgeInsets.only(left: 5.0),
-                    child: Text(item.title, style: TextStyle(fontSize: 15.0, color: Colors.black),),
-                  ),
-                ],
-              ),
-              Icon(Icons.arrow_right),
-            ],
+        return GestureDetector(
+          onTap: () {
+            _onItemClick(context, item, index);
+          },
+          child: Container(
+            padding: EdgeInsets.only(left: 20.0, right: 20.0),
+            width: size.width,
+            height: item.space ? 10.0 : item.divider ? 1.0 : 48.0,
+            color: Colors.white,
+            child: item.title == null ? item.space ? _buildSpace() : _buildDivider() :
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Icon(item.icon, color: mainColor,),
+                    Container(
+                      padding: EdgeInsets.only(left: 5.0),
+                      child: Text(item.title, style: TextStyle(fontSize: 15.0, color: Colors.black),),
+                    ),
+                  ],
+                ),
+                Icon(Icons.arrow_right),
+              ],
+            ),
           ),
         );
       },
@@ -69,6 +75,18 @@ class MePage extends StatelessWidget {
       color: Color(0xfff5f5f5),
       child: Text(''),
     );
+  }
+
+  // item click
+  _onItemClick(BuildContext context, _Item item, int index) {
+    switch (index) {
+      case 0:
+        if (item.space || item.divider) return;
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return FavoritePage();
+        }));
+        break;
+    }
   }
 }
 
