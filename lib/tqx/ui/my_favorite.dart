@@ -33,6 +33,33 @@ class _FavoritePageState extends State<FavoritePage> {
     });
   }
 
+  /**
+   * 清空 二次确认弹窗
+   */
+  Widget _buildAlertDialog(context) {
+    return AlertDialog(
+      content: Text('是否删除所有收藏？'),
+      contentTextStyle: TextStyle(fontSize: 15.0, color: Colors.black),
+      actions: <Widget>[
+        MaterialButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text('取消'),
+        ),
+        MaterialButton(
+          onPressed: () {
+            setState(() {
+              list.clear();
+            });
+            Navigator.of(context).pop();
+          },
+          child: Text('确定'),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,27 +79,7 @@ class _FavoritePageState extends State<FavoritePage> {
                 barrierDismissible: false,
                 context: context,
                 builder: (context) {
-                  return AlertDialog(
-                    content: Text('是否删除所有收藏？'),
-                    contentTextStyle: TextStyle(fontSize: 15.0, color: Colors.black),
-                    actions: <Widget>[
-                      MaterialButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Text('取消'),
-                      ),
-                      MaterialButton(
-                        onPressed: () {
-                          setState(() {
-                            list.clear();
-                          });
-                          Navigator.of(context).pop();
-                        },
-                        child: Text('确定'),
-                      ),
-                    ],
-                  );
+                  return _buildAlertDialog(context);
                 },
               );
             },
